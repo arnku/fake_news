@@ -1,3 +1,8 @@
+'''
+Splits a large csv file into smaller files of a specified size.
+Also removes punctuation and non-latin characters.
+'''
+
 import csv
 import os
 import regex as re

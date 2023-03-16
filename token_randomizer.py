@@ -1,3 +1,8 @@
+'''
+Randomizes the order of lines in a csv file.
+Saves the randomized files in a new folder with the same number of files as the original folder.
+'''
+
 import os
 import csv
 import random

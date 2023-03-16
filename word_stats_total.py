@@ -1,3 +1,19 @@
+'''
+Combines all the word stats files into one file.
+Return a csv file with the following format:
+    label, word, count
+
+Example:
+    label, word, count
+    'fake', the, 100
+    'fake', and, 50
+
+Input:
+    stats/word_stats_0.csv
+    stats/word_stats_1.csv
+    ...
+'''
+
 import os
 import csv
 

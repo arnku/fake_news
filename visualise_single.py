@@ -1,3 +1,7 @@
+'''
+Data visualisation for single stat file
+'''
+
 import csv
 import os
 

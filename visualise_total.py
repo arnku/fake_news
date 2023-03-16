@@ -1,3 +1,6 @@
+'''
+Visualises the total word count of all labels over all files.
+'''
 import matplotlib.pyplot as plt
 import csv
 

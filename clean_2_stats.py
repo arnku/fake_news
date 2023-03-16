@@ -1,3 +1,17 @@
+'''
+Takes tokenized text and creates a csv file with the word count for each label.
+Return a csv file with the following format:
+    label, word, count
+
+Example:
+    label, word, count
+    'fake', the, 100
+    'fake', and, 50
+
+Does this for all the files in the tokens folder.
+Uses all cpu cores.
+'''
+
 import os
 import csv
 from time import time

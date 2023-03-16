@@ -1,3 +1,12 @@
+'''
+This script takes the splits folder and cleans the text in the content column.
+It then saves the cleaned text in the tokens folder.
+
+Should be run after split_files.py
+
+Does not take a lot of ram, but does use all cpu cores.
+'''
+
 import os
 import cleantext
 from multiprocessing import Pool
