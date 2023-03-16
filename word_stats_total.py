@@ -17,7 +17,7 @@ Input:
 import os
 import csv
 
-stats_folder = 'stats/'
+stats_folder = 'stats_r/'
 save_file = 'word_stats_total.csv'
 
 stat_dict = {}

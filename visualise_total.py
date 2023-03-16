@@ -33,7 +33,11 @@ def save_word_count_per_label():
         with open('word_count_' + label + '.csv', 'w') as output_file:
             writer = csv.writer(output_file, delimiter=';')
             writer.writerow(['label', 'word', 'count'])
-            for word in stat_dict[label]:
+            # sort by count
+            stat_dict[label] = {k: v for k, v in sorted(stat_dict[label].items(), key=lambda item: item[1], reverse=True)}
+            for i, word in enumerate(stat_dict[label]):
+                if i >= 1048576 - 1:
+                    break
                 writer.writerow([label, word, stat_dict[label][word]])
 
 def combine_dicts(stat_dict):
@@ -46,6 +50,7 @@ def combine_dicts(stat_dict):
             else:
                 total_dict[word] += stat_dict[label][word]
     total_dict = {k: v for k, v in sorted(total_dict.items(), key=lambda item: item[1], reverse=True)}
+    
     return total_dict
 
 def save_word_count_total():
