@@ -1,6 +1,2 @@
 /.DS_Store
-/BIG2.csv
-/stats
-/stats_r
-/tokens
-/tokens_randomized
+*.csv
