@@ -21,6 +21,7 @@ csv.field_size_limit(1310720)
 re_non_latin = re.compile(r'[^\p{Latin}]')
 
 error_count = 0
+invalid_count = 0
 with open(file_name, 'r') as r:
     reader = csv.reader(r)
     header = next(reader) # skip header
@@ -31,7 +32,7 @@ with open(file_name, 'r') as r:
             if i != 0:
                 f.close()
             f = open(save_path + 'split_' + str(i) + '.csv', 'w')
-            print(f"{i:,} lines processed with {error_count} total errors")
+            print(f"{i:,} lines processed with {error_count} total errors and {invalid_count} invalid.")
             writer = csv.writer(f)
             writer.writerow(('header', 'content'))
         
@@ -39,6 +40,7 @@ with open(file_name, 'r') as r:
         try:
             content = re_non_latin.sub(' ', row[5])
             if content.isspace():
+                invalid_count += 1
                 continue
             writer.writerow((row[3], content))
         except:
