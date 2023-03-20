@@ -40,6 +40,51 @@ def save_word_count_per_label():
                     break
                 writer.writerow([label, word, stat_dict[label][word]])
 
+
+def combine_fake_non_fake_dicts(stat_dict):
+    # combine labels corresponding to fake and non-fake into two dict
+    fake_dict = {}
+    reliable_dict = {}
+    reliable_list = ['reliable', 'political']
+    fake_list = ['bias', 'clickbait', 'conspiracy', 'fake', 'hate', 'junksci', 'rumor', 'satire', 'unreliable']
+    for label in stat_dict:
+        if label in reliable_list:
+            for word in stat_dict[label]:
+                if not word in reliable_dict:
+                    reliable_dict[word] = stat_dict[label][word]
+                else:
+                    reliable_dict[word] += stat_dict[label][word]
+        elif label in fake_list:
+            for word in stat_dict[label]:
+                if not word in fake_dict:
+                    fake_dict[word] = stat_dict[label][word]
+                else:
+                    fake_dict[word] += stat_dict[label][word]
+        else:
+            pass
+    reliable_dict = {k: v for k, v in sorted(reliable_dict.items(), key=lambda item: item[1], reverse=True)}
+    fake_dict = {k: v for k, v in sorted(fake_dict.items(), key=lambda item: item[1], reverse=True)}
+    
+    return reliable_dict, fake_dict
+
+def save_word_count_fake_non_fake():
+    reliable_dict, fake_dict = combine_fake_non_fake_dicts(stat_dict)
+    # save to file
+    with open('word_count_reliable_total.csv', 'w') as output_file:
+        writer = csv.writer(output_file, delimiter=';')
+        writer.writerow(['label', 'word', 'count'])
+        for word in reliable_dict:
+            writer.writerow(['reliable', word, reliable_dict[word]])
+    output_file.close
+    # save to file
+    with open('word_count_fake_total.csv', 'w') as output_file:
+        writer = csv.writer(output_file, delimiter=';')
+        writer.writerow(['label', 'word', 'count'])
+        for word in fake_dict:
+            writer.writerow(['fake', word, fake_dict[word]])
+    
+
+
 def combine_dicts(stat_dict):
     # combine all labels into one dict
     total_dict = {}
@@ -83,3 +128,10 @@ def cut_off_words(percent):
             writer.writerow([word, total_dict[word]])
 
     return total_dict
+
+
+save_word_count_fake_non_fake()
+save_word_count_per_label()
+combine_dicts(stat_dict)
+total_dict = save_word_count_total()
+print(get_total_words_count(total_dict))
