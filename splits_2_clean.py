@@ -13,41 +13,13 @@ from multiprocessing import Pool
 from time import time
 import csv
 
-'''
-Fake:
-- Bias
-- Satire
-- Rumor
-- Conspiracy
-- Hate
-- Fake
-- Junksci
-- Unreliable
-- Clickbait
-
-Reliable:
-- Reliable
-- Political
-'''
-label_dict = {
-    'bias': 'fake', 
-    'satire': 'fake',
-    'rumor': 'fake',
-    'conspiracy': 'fake',
-    'hate': 'fake',
-    'fake': 'fake',
-    'junksci': 'fake',
-    'unreliable': 'fake',
-    'clickbait': 'fake',
-    'reliable': 'reliable',
-    'political': 'reliable'
-    }
-
 splits_folder = 'splits_randomized/'
 save_path = 'tokens/'
 
 csv.field_size_limit(1310720)
 os.makedirs(save_path, exist_ok=True)
+
+valid_labels = ['bias', 'satire', 'rumor', 'conspiracy', 'hate', 'fake', 'junksci', 'unreliable', 'clickbait', 'reliable', 'political']
 
 def process_file(split_path):
     header = False
@@ -64,10 +36,8 @@ def process_file(split_path):
                 writer.writerow(header)
 
             for row in reader:
-                if not row[0] in label_dict:
+                if row[0] not in valid_labels:
                     continue
-                row[0] = label_dict[row[0].lower()]
-                
                 content = cleantext.clean_words(row[1], clean_all= True)
                 writer.writerow((row[0],' '.join(content)))
 

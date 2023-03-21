@@ -100,16 +100,18 @@ with open('dfs.csv', 'w') as f:
         if df_[1] < cutoff_point:
             print("Cutoff point reached.")
             break
-        if i >= 1048576 - 1:
-            print("Max number of rows reached.")
-            break
+        #if i >= 1048576 - 1:
+        #    print("Max number of rows reached.")
+        #    break
         writer.writerow(df_)
 
-'''
 
-for token_file in token_files:
-    print('Loading file: ' + token_file)
-    print('Calculating tf...')
+from multiprocessing import Pool
+
+save_folder = 'tf-idf/'
+os.makedirs(save_folder, exist_ok=True)
+
+def process_file(token_file):
     tf_list = []
     with open(token_file, 'r') as f:
         reader = csv.reader(f)
@@ -117,18 +119,23 @@ for token_file in token_files:
         for row in reader:
             tf_list.append((row[0],tf(row[1])))
 
-
-    print('Calculating tf-idf...')
     tfidf_list = []
     for label, tf_ in tf_list:
-        tfidf_list.append((label, tf_idf(tf_, idfs))) 
+        try:
+            tfidf_list.append((label, tf_idf(tf_, idfs))) 
+        except KeyError:
+            print('KeyError: ' + label)
+            continue
 
-    print('Saving tf-idf...')
     # save tf-idf
-    with open('tf-idf_' + token_file.split('/')[-1], 'w') as f:
+    with open(save_folder + 'tf-idf_' + token_file.split('/')[-1], 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['id', 'tf-idf'])
         for tf_idf_ in tfidf_list:
             writer.writerow(tf_idf_)
 
-'''
+    print('Done with ' + token_file)
+
+if __name__ == '__main__':
+    with Pool() as p:
+        p.map(process_file, token_files)

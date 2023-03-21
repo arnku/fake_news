@@ -1,5 +1,6 @@
 import os
 import csv
+from multiprocessing import Pool
 
 dfs_file = 'dfs.csv'
 tokens_folder = 'tokens/'
@@ -17,9 +18,9 @@ with open(dfs_file, 'r') as f:
 
 dfs_len = len(dfs)
 
-# load tokens
-header = False
-for token_file in os.listdir(tokens_folder):
+def process_file(token_file):
+    # load tokens
+    header = False
     with open(tokens_folder + token_file, 'r') as f:
         with open(output_folder + "bago_" + token_file, 'w') as output_file:
             reader = csv.reader(f, delimiter=',')
@@ -40,4 +41,7 @@ for token_file in os.listdir(tokens_folder):
     print("Finished " + token_file)
 
                     
+if __name__ == '__main__':
+    with Pool() as p:
+        p.map(process_file, os.listdir(tokens_folder))
                 
