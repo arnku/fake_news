@@ -7,10 +7,11 @@ import os
 import csv
 import random
 
-token_folder = 'tokens/'
-save_folder = 'tokens_randomized/'
+token_folder = 'splits/'
+save_folder = 'splits_randomized/'
 
 os.makedirs(save_folder, exist_ok=True)
+csv.field_size_limit(1310720)
 
 num_tokens = 0
 csv_list = []
@@ -31,7 +32,3 @@ for i,tokens in enumerate(os.listdir(token_folder)):
         for row in reader:
             rando = random.randint(0, num_tokens - 1)
             csv_list[rando].writerow(row)
-
-# close all files
-for i in range(num_tokens):
-    csv_list[i].close()

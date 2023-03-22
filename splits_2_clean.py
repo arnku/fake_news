@@ -13,13 +13,17 @@ from multiprocessing import Pool
 from time import time
 import csv
 
-splits_folder = 'splits/'
+splits_folder = 'splits_randomized/'
 save_path = 'tokens/'
-csv.field_size_limit(1310720)
 
+csv.field_size_limit(1310720)
 os.makedirs(save_path, exist_ok=True)
 
+valid_labels = ['bias', 'satire', 'rumor', 'conspiracy', 'hate', 'fake', 'junksci', 'unreliable', 'clickbait', 'reliable', 'political']
+
 def process_file(split_path):
+    header = False
+
     start_time = time()
     error_count = 0
     with open(splits_folder + split_path, 'r') as input_file:
@@ -27,10 +31,13 @@ def process_file(split_path):
             reader = csv.reader(input_file)
             writer = csv.writer(output_file)
 
-            header = next(reader) # skip header
-            writer.writerow(header)
+            if header:
+                header = next(reader) # skip header
+                writer.writerow(header)
 
             for row in reader:
+                if row[0] not in valid_labels:
+                    continue
                 content = cleantext.clean_words(row[1], clean_all= True)
                 writer.writerow((row[0],' '.join(content)))
 
