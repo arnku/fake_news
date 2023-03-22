@@ -21,13 +21,15 @@ def tf(article : str) -> dict:
     
     return tf
 
-def df(tokens_list : list) -> dict:
+def df(tokens_list : list, verbose = False) -> dict:
     '''
     How many articles each word is in.
     Takes a list of strings (token files) as input and returns a dictionary.
     '''
     df = {}
-    for articles in tokens_list:
+    for i, articles in enumerate(tokens_list):
+        if verbose:
+            print(i, end='\r')
         with open(articles, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             header = next(reader)
@@ -40,19 +42,23 @@ def df(tokens_list : list) -> dict:
                         df[word] += 1
                     else:
                         df[word] = 1
+    print('Done df')
     return df
 
-def get_number_of_articles(tokens_list : list) -> int:
+def get_number_of_articles(tokens_list : list, verbose = False) -> int:
     '''
     Returns the number of articles in the dataset.
     Takes a list of strings (token files) as input and returns an integer.
     '''
     n = 0
     for articles in tokens_list:
+        if verbose:
+            print(n, end='\r')
         with open(articles, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             header = next(reader)
             n += sum([1 for row in reader])
+    print(n)
     return n
 
 def idf(df, n):
@@ -67,11 +73,11 @@ def idf(df, n):
 
 def tf_idf(tf, idf):
     '''
-    Takes a dictionary (tf) and a dictionary (idf) as input and returns a dictionary.
+    Takes a dictionary (tf) and a dictionary (idf) as input and returns a list of tuples.
     '''
-    tf_idf = {}
+    tf_idf = []
     for word, t in tf.items():
-        tf_idf[word] = t * idf[word]
+        tf_idf.append((word, t * idf[word]))
     return tf_idf
 
 print('Loading files...')
@@ -79,8 +85,8 @@ token_files = os.listdir('tokens')
 token_files = ['tokens/' + file for file in token_files]
 
 print('Calculating idf...')
-dfs = df(token_files)
-n_articles = get_number_of_articles(token_files)
+dfs = df(token_files, verbose=True)
+n_articles = get_number_of_articles(token_files, verbose=True)
 idfs = idf(dfs, n_articles)
 
 percent_word_cutoff = 0.01 / 100 # if a word is in less than 0.1% of the articles, remove it
