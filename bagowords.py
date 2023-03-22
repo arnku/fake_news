@@ -8,16 +8,6 @@ output_folder = 'bagowords/'
 
 os.makedirs(output_folder, exist_ok=True)
 
-# load dfs
-dfs = {}
-with open(dfs_file, 'r') as f:
-    reader = csv.reader(f, delimiter=',')
-    header = next(reader)
-    for i, row in enumerate(reader):
-        dfs[row[0]] = i
-
-dfs_len = len(dfs)
-
 def process_file(token_file):
     # load tokens
     header = False
@@ -42,6 +32,16 @@ def process_file(token_file):
 
                     
 if __name__ == '__main__':
+    # load dfs
+    dfs = {}
+    with open(dfs_file, 'r') as f:
+        reader = csv.reader(f, delimiter=',')
+        header = next(reader)
+        for i, row in enumerate(reader):
+            dfs[row[0]] = i
+
+    dfs_len = len(dfs)
+
     with Pool() as p:
         p.map(process_file, os.listdir(tokens_folder))
                 
