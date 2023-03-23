@@ -23,7 +23,7 @@ def calc_lix(dict_ : dict) -> dict:
             for j in i.split():
                 if len(j) >= 7:
                     total_long_words += 1
-            total_lix_list.append((total_long_words*100)/total_words)
+            total_lix_list.append((total_long_words)/total_words)
         lix_dict[label] = total_lix_list
     return lix_dict
 
