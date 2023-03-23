@@ -8,7 +8,7 @@ import csv
 import random
 
 token_folder = 'splits/'
-save_folder = 'splits_randomized/'
+save_folder = 'splits_randomized/' 
 
 os.makedirs(save_folder, exist_ok=True)
 csv.field_size_limit(1310720)

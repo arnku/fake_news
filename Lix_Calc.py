@@ -1,8 +1,9 @@
 import os
 import csv
+import statistics
 
 
-token_dirs = 'tokens_randomized/'
+token_dirs = 'tokens/token_rand_split_0.csv'
 list = []
 
 with open(token_dirs,'r') as input_file: 
@@ -18,7 +19,7 @@ def calc_lix(list):
         total_long_words = 0.0
         total_words = len(i.split())
         for j in i.split():
-            if len(j) > 6:
+            if len(j) >= 7:
                 total_long_words += 1
         total_lix_list.append((total_long_words*100)/total_words)
     return total_lix_list
@@ -35,6 +36,9 @@ def sort_list_by_label(list):
 
 def mean_lix(list):
     return sum(list)/len(list)
+
+def median_lix(list):
+    return statistics.median(list)
     
 def std_lix(l1,l2):
     return (sum((i - l1)**2 for i in l2)/len(l2))**0.5
@@ -43,8 +47,8 @@ reliable_list, unreliable_list = sort_list_by_label(list)
 reliable_lix = calc_lix(reliable_list)
 unreliable_lix = calc_lix(unreliable_list)
 
-""" print("reliable:", calc_lix(reliable_list)) """
 
+print("reliable:", calc_lix(reliable_list))
 print("_______________________________________________________________________________________________")
 print("")
 print("")
@@ -56,6 +60,14 @@ print("unreliable:", unreliable_mean_lix)
 print("____________________________________________________")
 print("")
 print("")
+print("Median lix numbers:")
+reliable_median_lix = median_lix(reliable_lix)
+unreliable_median_lix = median_lix(unreliable_lix)
+print("reliable:", reliable_median_lix)
+print("unreliable:", unreliable_median_lix)
+print("")
+print("")
+print("____________________________________________________")
 print("STANDARD DEVIATION lix numbers:")
 reliable_std_lix = std_lix(reliable_mean_lix, reliable_lix)
 unreliable_std_lix = std_lix(unreliable_mean_lix, unreliable_lix)
