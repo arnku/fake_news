@@ -11,28 +11,29 @@ with open(token_dirs,'r') as input_file:
     for row in reader:
         list.append(row)
 
-def calc_lix(list):
-    total_words = 0.0
-    total_long_words = 0.0
-    total_lix_list = []
-    for i in list[1:]:
+def calc_lix(dict_ : dict) -> dict:
+    lix_dict = {}
+    for label, words in dict_.items():
+        total_words = 0.0
         total_long_words = 0.0
-        total_words = len(i.split())
-        for j in i.split():
-            if len(j) >= 7:
-                total_long_words += 1
-        total_lix_list.append((total_long_words*100)/total_words)
-    return total_lix_list
+        total_lix_list = []
+        for i in words[1:]:
+            total_long_words = 0.0
+            total_words = len(i.split())
+            for j in i.split():
+                if len(j) >= 7:
+                    total_long_words += 1
+            total_lix_list.append((total_long_words*100)/total_words)
+        lix_dict[label] = total_lix_list
+    return lix_dict
 
-def sort_list_by_label(list):
-    reliable_list = []
-    unreliable_list = []
-    for i in list[1:]:
-        if i[0] == 'reliable':
-            reliable_list.append(i[1])
-        else:
-            unreliable_list.append(i[1])
-    return reliable_list, unreliable_list
+def sort_list_by_label(list : list) -> dict:
+    label_dict = {}
+    for label, words in list[1:]:
+        if label not in label_dict:
+            label_dict[label] = [[words]]
+        label_dict[label].append(words)
+    return label_dict
 
 def mean_lix(list):
     return sum(list)/len(list)
@@ -43,38 +44,40 @@ def median_lix(list):
 def std_lix(l1,l2):
     return (sum((i - l1)**2 for i in l2)/len(l2))**0.5
 
-reliable_list, unreliable_list = sort_list_by_label(list)
-reliable_lix = calc_lix(reliable_list)
-unreliable_lix = calc_lix(unreliable_list)
+label_dict = sort_list_by_label(list)
+label_lix = calc_lix(label_dict)
 
 
-print("reliable:", calc_lix(reliable_list))
-print("_______________________________________________________________________________________________")
-print("")
-print("")
-print("MEAN lix numbers:")
-reliable_mean_lix = mean_lix(reliable_lix)
-unreliable_mean_lix = mean_lix(unreliable_lix)
-print("reliable:", reliable_mean_lix)
-print("unreliable:", unreliable_mean_lix)
-print("____________________________________________________")
-print("")
-print("")
-print("Median lix numbers:")
-reliable_median_lix = median_lix(reliable_lix)
-unreliable_median_lix = median_lix(unreliable_lix)
-print("reliable:", reliable_median_lix)
-print("unreliable:", unreliable_median_lix)
-print("")
-print("")
-print("____________________________________________________")
-print("STANDARD DEVIATION lix numbers:")
-reliable_std_lix = std_lix(reliable_mean_lix, reliable_lix)
-unreliable_std_lix = std_lix(unreliable_mean_lix, unreliable_lix)
-print("reliable:", reliable_std_lix)
-print("unreliable:", unreliable_std_lix)
-print("____________________________________________________")
-print("")
-print("")
+for label, lix in label_lix.items():
+    print(label)
+    #print("reliable:", calc_lix(lix))
+    print("MEAN lix numbers:")
+    reliable_mean_lix = mean_lix(lix)
+    print(reliable_mean_lix)
+    print("Median lix numbers:")
+    reliable_median_lix = median_lix(lix)
+    print(reliable_median_lix)
+    print("STANDARD DEVIATION lix numbers:")
+    reliable_std_lix = std_lix(reliable_mean_lix, lix)
+    print( reliable_std_lix)
+    print("____________________________________________________")
 
-       
+        
+
+#plot label_lix
+import matplotlib.pyplot as plt
+import numpy as np
+
+for label, lix in label_lix.items():
+    print(label)
+    plt.hist(lix, bins=20)
+    plt.title(label)
+    plt.show()
+
+# plot all in one
+
+for label, lix in label_lix.items():
+    print(label)
+    plt.hist(lix, bins=20)
+plt.title("All")
+plt.show()
