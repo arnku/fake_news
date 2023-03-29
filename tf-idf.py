@@ -2,7 +2,9 @@ import csv
 import os
 import math
 
-tokens_folder = '50-50_split/'
+tokens_folder = 'numerated/'
+csv.field_size_limit(1310720)
+
 
 def tf(article : str) -> dict:
     '''
@@ -36,7 +38,7 @@ def df(tokens_list : list, verbose = False) -> dict:
             reader = csv.reader(f, delimiter=',')
             header = next(reader)
             for article in reader:
-                words = article[1].split()
+                words = article[2].split()
                 # remove duplicates
                 words = list(set(words))
                 for word in words:
@@ -129,20 +131,25 @@ def process_file(token_file):
         reader = csv.reader(f)
         #header = next(reader)
         for row in reader:
-            tf_list.append((row[0],tf(row[1])))
+            tf_list.append((row[0], row[1],tf(row[2])))
 
     tfidf_list = []
-    for label, tf_ in tf_list:
+    for i, label, tf_ in tf_list:
         try:
-            tfidf_list.append((label, tf_idf(tf_, idfs))) 
+            a = tf_idf(tf_, idfs)
         except KeyError:
-            print('KeyError: ' + label)
+            print('KeyError: ' + i)
             continue
+        if len(a) == 0:
+            print('Empty list: ' + i)
+            continue
+        tfidf_list.append((i, label, a)) 
+
 
     # save tf-idf
     with open(save_folder + 'tf-idf_' + token_file.split('/')[-1], 'w') as f:
         writer = csv.writer(f)
-        writer.writerow(['id', 'tf-idf'])
+        writer.writerow(['i', 'id', 'tf-idf'])
         for tf_idf_ in tfidf_list:
             writer.writerow(tf_idf_)
 
