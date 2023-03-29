@@ -3,7 +3,7 @@ import csv
 import statistics
 
 
-token_dirs = 'tokens/token_rand_split_0.csv'
+token_dirs = 'tokens/token_rand_split_220000.csv'
 list = []
 
 with open(token_dirs,'r') as input_file: 
@@ -20,6 +20,9 @@ def calc_lix(dict_ : dict) -> dict:
         for i in words[1:]:
             total_long_words = 0.0
             total_words = len(i.split())
+            if total_words == 0:
+                total_lix_list.append(0)
+                continue
             for j in i.split():
                 if len(j) >= 7:
                     total_long_words += 1
@@ -68,16 +71,14 @@ for label, lix in label_lix.items():
 import matplotlib.pyplot as plt
 import numpy as np
 
-for label, lix in label_lix.items():
-    print(label)
-    plt.hist(lix, bins=20)
-    plt.title(label)
-    plt.show()
+#for label, lix in label_lix.items():
+#    plt.hist(lix, bins=20)
+#    plt.title(label)
+#    plt.show()
 
 # plot all in one
 
 for label, lix in label_lix.items():
-    print(label)
     plt.hist(lix, bins=20)
 plt.title("All")
 plt.show()
