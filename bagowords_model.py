@@ -1,12 +1,16 @@
 import os
 import csv
-from sklearn.linear_model import LogisticRegression
+#from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+#from sklearn import naive_bayes
+from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 import ast
+import numpy as np
 
 
-bago_folder = 'bagowords/'
-dfs_file = 'dfs_reduced.csv'
+sparce_matrix_folder = 'reduced_matrix/'
+dfs_file = 'dfs.csv'
 
 csv.field_size_limit(1310720)
 
@@ -37,32 +41,55 @@ dfs_len = len(dfs)
 print("Loading data...")
 # load bago
 header = True
-dataset_in = []
-dataset_out = []
-for i, bago_file in enumerate(os.listdir(bago_folder)):
-    if i > 1:
-        break
-    print(bago_file)
-    with open(bago_folder + bago_file, 'r') as f:
+
+rows = []
+cols = []
+vals = []
+labels = {}
+for i, matrix_file in enumerate(os.listdir(sparce_matrix_folder)):
+#for i, matrix_file in enumerate(["rematrix_tf-idf_fifty_token_rand_split_0.csv"]):
+    print(matrix_file)
+    with open(sparce_matrix_folder + matrix_file, 'r') as f:
         reader = csv.reader(f, delimiter=',')
         if header:
             header = next(reader)
         for row in reader:
-            l = [0] * dfs_len
-            for v in ast.literal_eval(row[3]):
-                if int(v) >= dfs_len:
-                    continue
-                l[int(v)] = 1
-            dataset_in.append(l)
-            dataset_out.append(label_dict[row[0]])
+            article_id, word_id = row[2], row[3]
+            article_id = int(article_id)
+            if article_id not in labels:
+                labels[article_id] = (label_dict[row[0]])
+            
+            rows.append(int(article_id))
+            cols.append(int(word_id))
+            vals.append(float(row[4]))
+
+
+
+sparce_matrix = csr_matrix((vals, (rows, cols)))
+del rows
+del cols
+del vals
+# sort labels
+
+labels_n = []
+for i in range(len(labels)):
+    try:
+        labels_n.append(labels[i])
+    except:
+        pass
+del labels
+
+print(sparce_matrix.shape)
+print(len(labels_n))
+
 
 print("Splitting data...")
-X_train, X_test, y_train, y_test = train_test_split(dataset_in, dataset_out, test_size=0.2, random_state=42)
-del dataset_in
-del dataset_out
+X_train, X_test, y_train, y_test = train_test_split(sparce_matrix, labels_n, test_size=0.2, random_state=42)
+del sparce_matrix
+del labels_n
 
 print("Training...")
-clf = LogisticRegression(random_state=0, solver='lbfgs', multi_class='multinomial', max_iter=1000).fit(X_train, y_train)
+clf = MLPClassifier(max_iter=100).fit(X_train, y_train)
 
 print("Testing...")
 print(clf.score(X_test, y_test))

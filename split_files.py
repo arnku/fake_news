@@ -18,10 +18,12 @@ os.makedirs(save_path, exist_ok=True)
 csv.field_size_limit(1310720)
 
 # regex to remove non-latin characters
-re_non_latin = re.compile(r'[^\p{Latin}]')
+re_non_latin = re.compile(r'[^\p{Latin}|\s|:\/._\-?=|0-9]')
+re_only_letters = re.compile(r'[^\p{Latin}]')
 
 error_count = 0
 invalid_count = 0
+total_valid_count = 0
 with open(file_name, 'r') as r:
     reader = csv.reader(r)
     header = next(reader) # skip header
@@ -39,10 +41,13 @@ with open(file_name, 'r') as r:
         # Remove punctuation and non-latin characters
         try:
             content = re_non_latin.sub(' ', row[5])
-            if content.isspace():
+            if re_only_letters.sub(' ', content).isspace() or not content: # Remove articles with only non-latin characters
                 invalid_count += 1
                 continue
             writer.writerow((row[3], content))
+            total_valid_count += 1
         except:
             error_count += 1
             continue
+print(f"{i:,} lines processed with {error_count} total errors and {invalid_count} invalid. {total_valid_count:,} valid lines.")
+# 8,529,193 lines processed with 238 total errors and 42364 invalid. 8,486,592 valid lines.

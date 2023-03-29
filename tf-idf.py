@@ -2,6 +2,8 @@ import csv
 import os
 import math
 
+tokens_folder = '50-50_split/'
+
 def tf(article : str) -> dict:
     '''
     How many procent each word is in the article.
@@ -81,8 +83,8 @@ def tf_idf(tf, idf):
     return tf_idf
 
 print('Loading files...')
-token_files = os.listdir('tokens')
-token_files = ['tokens/' + file for file in token_files]
+token_files = os.listdir(tokens_folder)
+token_files = [tokens_folder + file for file in token_files]
 
 print('Calculating idf...')
 dfs = df(token_files, verbose=True)
@@ -90,6 +92,7 @@ n_articles = get_number_of_articles(token_files, verbose=True)
 idfs = idf(dfs, n_articles)
 
 percent_word_cutoff = 0.01 / 100 # if a word is in less than 0.1% of the articles, remove it
+absolute_word_cutoff = 10000
 cutoff_point = int(percent_word_cutoff * n_articles)
 
 print('Total number of articles: ' + str(n_articles))
@@ -105,6 +108,9 @@ with open('dfs.csv', 'w') as f:
     for i, df_ in enumerate(dfs):
         if df_[1] < cutoff_point:
             print("Cutoff point reached.")
+            break
+        if i >= absolute_word_cutoff:
+            print("Max number of rows reached.")
             break
         #if i >= 1048576 - 1:
         #    print("Max number of rows reached.")
