@@ -1,7 +1,6 @@
 import os
 import csv
 from transformers import pipeline
-from multiprocessing import Pool
 
 
 model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
@@ -64,17 +63,17 @@ def process(folder):
                 article_id = row[0]
                 label = row[1]
                 article = row[2]
-                l = lix(article)
-                p = percent_in_bag(article)
-                s = get_sentiment(article)
-                writer.writerow([article_id, label, l, p, s])
+                try:
+                    l = lix(article)
+                    p = percent_in_bag(article)
+                    s = get_sentiment(article)
+                    writer.writerow([article_id, label, l, p, s])
+                except ZeroDivisionError:
+                    print('Zero division at ' + article_id)
                     
-    print('Processed ' + folder)
-
 if __name__ == '__main__':
     folders = [tokens_folder + folder for folder in os.listdir(tokens_folder)]
-    #with Pool() as p:
-    #    p.map(process, folders)
+    folders = sorted(folders, key=lambda x: int(x.split('_')[-1].split('.')[0]))
+
     for folder in folders:
         process(folder)
-    #process('numerated/fifty_token_rand_split_0.csv')

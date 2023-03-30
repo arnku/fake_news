@@ -26,13 +26,14 @@ def process_file(tf_idf):
             reader = csv.reader(f)
             writer = csv.writer(g)
             next(reader)
-            writer.writerow(['label', 'articel_id', 'word_id', 'tf_idf)'])
-            for row in enumerate(reader):
+            writer.writerow(['label', 'articel_id', 'word_id', 'tf_idf'])
+            for row in reader:
                 i = int(row[0])
                 label = row[1]
                 tf_idf_ = ast.literal_eval(row[2])
                 for (word, val) in tf_idf_:
                     if word not in word_id_dict:
+                        writer.writerow([label, i, 0, 0])
                         continue
                     writer.writerow([label, i, word_id_dict[word], val])
     print('Processed ' + tf_idf)
@@ -41,3 +42,4 @@ if __name__ == '__main__':
     tf_idf_files = [tf_idf_folder + file for file in os.listdir(tf_idf_folder)]
     with Pool() as p:
         p.map(process_file, tf_idf_files)
+

@@ -8,8 +8,10 @@ import numpy as np
 import scipy.sparse as sp
 
 
-sparce_matrix_folder = 'reduced_matrix/'
+sparce_matrix_folder = 'testrrr2/'
+features_folder = 'test1/'
 dfs_file = 'dfs.csv'
+n_fetures = 4
 
 csv.field_size_limit(1310720)
 
@@ -32,9 +34,8 @@ dfs = {}
 with open(dfs_file, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     header = next(reader)
-    for i, row in enumerate(reader):
-        dfs[row[0]] = i
-
+    for i, r in enumerate(reader):
+        dfs[r[0]] = i
 dfs_len = len(dfs)
 
 print("Loading data...")
@@ -43,49 +44,65 @@ header = True
 labels = {}
 first_time = True
 last_row = 0
-for i, matrix_file in enumerate(os.listdir(sparce_matrix_folder)):
-    if i > 250:
-        break
-    print(matrix_file)
-    with open(sparce_matrix_folder + matrix_file, 'r') as f:
-        reader = csv.reader(f, delimiter=',')
-        if header:
-            header = next(reader)
 
-        rows = []
-        cols = []
-        vals = []
-        n_row = 0
-        for row in reader:
-            article_id, word_id = row[2], row[3]
-            article_id = int(article_id)
-            if article_id not in labels:
-                labels[article_id] = (label_dict[row[0]])
+# sort files
+sm_folders = sorted(os.listdir(sparce_matrix_folder), key=lambda x: int(x.split('_')[-1].split('.')[0])) 
+fe_folders = sorted(os.listdir(features_folder), key=lambda x: int(x.split('_')[-1].split('.')[0]))
 
-            if article_id != last_row:
+for i, (matrix_file, feature_file) in enumerate(zip(sm_folders, fe_folders)):
 
-                # number of words not in dfs
+    with open(sparce_matrix_folder + matrix_file, 'r') as sm:
+        with open(features_folder + feature_file, 'r') as fe:
+            sm_reader = csv.reader(sm, delimiter=',')
+            fe_reader = csv.reader(fe, delimiter=',')
+
+            if header:
+                next(sm_reader)
+                next(fe_reader)
+
+            rows = []
+            cols = []
+            vals = []
+            n_row = 0
+
+            for sm in sm_reader:
+
+                article_id, word_id = sm[1], sm[2]
+                article_id = int(article_id)
+
+                if article_id not in labels:
+                    labels[article_id] = (label_dict[sm[0]])
+
+                if article_id != last_row:
+
+                    # add fetures
+                    fetures = next(fe_reader)
+                    article_id_fe = fetures[0]
+                    fetures = fetures[2:]
+                    if article_id - 1 != int(article_id_fe):
+                        print(article_id, article_id_fe)
+                        raise Exception("Wrong order")
+                    
+                    for j, feature in enumerate(fetures):
+                        rows.append(n_row)
+                        cols.append(dfs_len + 1 + j)
+                        vals.append(float(feature))
+
+                    last_row = article_id
+                    n_row += 1
+
                 rows.append(n_row)
-                cols.append(dfs_len + 1)
-                vals.append(not_in_dfs)
+                cols.append(int(word_id))
+                vals.append(float(sm[3]))
 
-                last_row = article_id
-                n_row += 1
+            if first_time:
+                first_time = False
+                sparce_matrix = csr_matrix((vals, (rows, cols)), shape=(n_row + 1, dfs_len + n_fetures + 1))
 
-            rows.append(n_row)
-            cols.append(int(word_id))
-            vals.append(float(row[4]))
+            else:
+                sparce_matrix = sp.vstack([sparce_matrix, csr_matrix((vals, (rows, cols)), shape=(n_row + 1, dfs_len + n_fetures + 1))])
 
-            not_in_dfs = int(row[1])
-
-        if first_time:
-            first_time = False
-            sparce_matrix = csr_matrix((vals, (rows, cols)), shape=(n_row + 1, dfs_len))
-
-        else:
-            sparce_matrix = sp.vstack([sparce_matrix, csr_matrix((vals, (rows, cols)), shape=(n_row + 1, dfs_len))])
-
-        last_row += 1
+            last_row += 1
 
 
 # sort labels
