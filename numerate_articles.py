@@ -28,4 +28,4 @@ def numerate(input_folder, output_folder, header = True):
                     n += 1
 
 if __name__ == '__main__':
-    numerate('50-50_split/', 'numerated/', header = False)
+    numerate('tokens/', 'numerated/', header = False)

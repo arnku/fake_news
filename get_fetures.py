@@ -2,15 +2,14 @@ import os
 import csv
 from transformers import pipeline
 
+tokens_folder = 'numerated/'
+words_file = 'dfs.csv'
+output_folder = 'features/'
 
 model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 sentiment_task = pipeline("sentiment-analysis", model=model_path, tokenizer=model_path)
 
 csv.field_size_limit(1310720)
-
-tokens_folder = 'numerated/'
-words_file = 'dfs.csv'
-output_folder = 'features/'
 
 os.makedirs(output_folder, exist_ok=True)
 

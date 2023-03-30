@@ -22,5 +22,12 @@
 
 **splits_2_clean** , splits_folder = 'splits/'
 
-**tf-idf**, tokens_folder = 'tokens/', create_new_dfs = False
+**numerate_articles.py**, numerate('tokens/', 'numerated/', header = False)
 
+**tf-idf**, tokens_folder = 'numerated/', create_new_dfs = False
+
+**get_features.py** tokens_folder = 'numerated/', words_file = 'dfs.csv', output_folder = 'features/'
+
+**sparce_matrix.py** words_file = 'dfs.csv', tf_idf_folder = 'tf-idf/', save_folder = 'reduced_matrix/'
+
+**remove_gaps.py** folder1 = "tf-idf/", folder2 = "features/"

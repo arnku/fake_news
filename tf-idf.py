@@ -2,7 +2,7 @@ import csv
 import os
 import math
 
-tokens_folder = 'tokens/'
+tokens_folder = 'numerated/'
 create_new_dfs = False
 csv.field_size_limit(1310720)
 
