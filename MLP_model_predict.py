@@ -130,3 +130,8 @@ print("Predicting...")
 print(model.score(sparce_matrix, labels_n))
 
 
+import matplotlib.pyplot as plt
+import sklearn.metrics as metrics
+metrics.ConfusionMatrixDisplay.from_predictions(labels_n, model.predict(sparce_matrix)).plot()
+plt.show()
+print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(labels_n, model.predict(sparce_matrix)))
