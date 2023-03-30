@@ -2,12 +2,8 @@ import os
 import csv
 import statistics
 
-<<<<<<< HEAD
-token_dirs = 'tokens/token_rand_split_0.csv'
-=======
 
 token_dirs = 'tokens/token_rand_split_220000.csv'
->>>>>>> 1a78db82b8d7916e65e8d5724bf28d22a5fc9def
 list = []
 
 with open(token_dirs,'r') as input_file: 
