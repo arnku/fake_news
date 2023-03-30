@@ -86,7 +86,12 @@ print("score: ", model.score(X_test, y_test))
 import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
 metrics.ConfusionMatrixDisplay.from_predictions(y_test, model.predict(X_test), normalize='all').plot()
-print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, model.predict(X_test), average='macro'))
+print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, model.predict(X_test), average='micro'))
 
 print("always guess correct: ", sum(y_test)/len(y_test))
 print("always guess incorrect: ", 1 - sum(y_test)/len(y_test))
+
+# Save model
+import pickle
+with open('nieve_model.pkl', 'wb') as f:
+    pickle.dump(model, f)
