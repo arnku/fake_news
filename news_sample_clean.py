@@ -18,7 +18,7 @@ def toke_text(text):
         toke_d[i]['content'] = cleantext.clean_words(toke_d[i]['content'],
                                             clean_all = False,
                                             lowercase=True,
-                                            reg = r'http\S+',
+                                            reg = r'http.+',
                                             reg_replace = 'URL',
                                             punct=True)                               
     return toke_d
@@ -31,7 +31,7 @@ def toke_text_remStopW(text):
                                             clean_all = False,
                                             stopwords=True,
                                             lowercase=True,
-                                            reg = r'http\S+',
+                                            reg = r'http.+',
                                             reg_replace = 'URL',
                                             punct=True
                                             )                               
@@ -46,7 +46,7 @@ def toke_text_stem(text):
                                             stopwords=True,
                                             lowercase=True,
                                             stemming=True,
-                                            reg = r'http\S+',
+                                            reg = r'https\www\..*',
                                             reg_replace = 'URL',
                                             punct=True
                                             )                               
@@ -76,5 +76,8 @@ toked_stemd_stoped_WC = wordcount(toked_stemd_stoped)
 print("toked_WC:",len(toked_WC))
 print("tokedStoped_WC:",len(tokedStoped_WC))
 print("toked_stemd_stoped_WC:",len(toked_stemd_stoped_WC))
+
+print(toked[1]["content"]) 
+
 
 
