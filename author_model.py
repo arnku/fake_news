@@ -75,3 +75,9 @@ print("Testing model...")
 print("score: ", model.score(X_test, y_test))
 print("always guess correct: ", sum(y_test)/len(y_test))
 print("always guess incorrect: ", 1 - sum(y_test)/len(y_test))
+
+import matplotlib.pyplot as plt
+import sklearn.metrics as metrics
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, model.predict(X_test), normalize='all').plot()
+plt.show()
+print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, model.predict(X_test), average='macro'))
