@@ -50,4 +50,3 @@ with open(file_name, 'r') as r:
             error_count += 1
             continue
 print(f"{i:,} lines processed with {error_count} total errors and {invalid_count} invalid. {total_valid_count:,} valid lines.")
-# 8,529,193 lines processed with 238 total errors and 42364 invalid. 8,486,592 valid lines.

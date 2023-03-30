@@ -8,12 +8,13 @@ import numpy as np
 import scipy.sparse as sp
 
 
-sparce_matrix_folder = 'testrrr2/'
-features_folder = 'test1/'
+sparce_matrix_folder = 'reduced_matrix/'
+features_folder = 'features/'
 dfs_file = 'dfs.csv'
 n_fetures = 4
 
 csv.field_size_limit(1310720)
+
 
 label_dict = {
     'bias': False,
@@ -26,7 +27,14 @@ label_dict = {
     'unreliable': False,
     'clickbait': False,
     'reliable': True,
-    'political': True
+    'political': True,
+
+    'pants-fire': False,
+    'false': False,
+    'half-true': False,
+    'barely-true': False,
+    'mostly-true': False,
+    'true': True,
     }
 
 # load dfs
@@ -113,12 +121,12 @@ del labels
 
 # import model
 import pickle
-model_path = 'model.pkl'
+model_path = 'mlp_model.pkl'
 with open(model_path, 'rb') as f:
     model = pickle.load(f)
 
 # predict
 print("Predicting...")
-y_pred = model.predict(sparce_matrix)
+print(model.score(sparce_matrix, labels_n))
 
 

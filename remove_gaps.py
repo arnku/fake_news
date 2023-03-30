@@ -75,6 +75,7 @@ def remove_gaps(folder, header = True):
     os.makedirs("tmp")
     n = 0
     last_n = 0
+    first_time = True
     for file_ in files:
         print(file_)
         with open(folder + file_, 'r') as f:
@@ -85,14 +86,13 @@ def remove_gaps(folder, header = True):
                     header = next(reader)
                     writer.writerow(header)
                 for row in reader:
-                    id_ = int(row[0])
-                    if id_ > last_n:
-                        n += 1
-                        last_n = id_
                     row[0] = n
+                    n += 1
                     writer.writerow(row)
+    
     shutil.rmtree(folder)
     os.rename("tmp", folder)
+
 
 def remove_to_size(folder1, folder2):
     '''
