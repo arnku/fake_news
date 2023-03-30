@@ -1,6 +1,6 @@
 import os
 import csv
-from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 import ast
@@ -38,7 +38,6 @@ with open(dfs_file, 'r') as f:
 dfs_len = len(dfs)
 
 print("Loading data...")
-# load bago
 header = True
 
 labels = {}
@@ -64,12 +63,20 @@ for i, matrix_file in enumerate(os.listdir(sparce_matrix_folder)):
                 labels[article_id] = (label_dict[row[0]])
 
             if article_id != last_row:
+
+                # number of words not in dfs
+                rows.append(n_row)
+                cols.append(dfs_len + 1)
+                vals.append(not_in_dfs)
+
                 last_row = article_id
                 n_row += 1
 
             rows.append(n_row)
             cols.append(int(word_id))
-            vals.append(1)
+            vals.append(float(row[4]))
+
+            not_in_dfs = int(row[1])
 
         if first_time:
             first_time = False
@@ -93,12 +100,12 @@ del sparce_matrix
 del labels_n
 
 print("Training...")
-clf = LogisticRegression(max_iter=10000).fit(X_train, y_train)
+clf = MLPClassifier().fit(X_train, y_train)
 
 print("Testing...")
 print(clf.score(X_test, y_test))
 
 # save model
 import pickle
-with open('bago_model.pkl', 'wb') as f:
+with open('mlp_model.pkl', 'wb') as f:
     pickle.dump(clf, f)

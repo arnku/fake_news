@@ -26,23 +26,17 @@ def process_file(tf_idf):
             reader = csv.reader(f)
             writer = csv.writer(g)
             next(reader)
-            writer.writerow(['id', 'percent_not_in_bag', 'reduced_matrix'])
-            for row in reader:
-                label = row[0]
-                tf_idf_ = ast.literal_eval(row[1])
-                if len(tf_idf_) == 0:
-                    continue
-                not_in_bag = 0
-                rm = []
+            writer.writerow(['label', 'articel_id', 'word_id', 'tf_idf)'])
+            for row in enumerate(reader):
+                i = int(row[0])
+                label = row[1]
+                tf_idf_ = ast.literal_eval(row[2])
                 for (word, val) in tf_idf_:
                     if word not in word_id_dict:
-                        not_in_bag += 1
                         continue
-                    rm.append((word_id_dict[word], val))
-                not_in_bag = not_in_bag / len(tf_idf_)
-                writer.writerow([label, not_in_bag, rm])
+                    writer.writerow([label, i, word_id_dict[word], val])
     print('Processed ' + tf_idf)
-            
+
 if __name__ == '__main__':
     tf_idf_files = [tf_idf_folder + file for file in os.listdir(tf_idf_folder)]
     with Pool() as p:

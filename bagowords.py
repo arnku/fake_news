@@ -3,10 +3,11 @@ import csv
 from multiprocessing import Pool
 
 dfs_file = 'dfs.csv'
-tokens_folder = 'tokens/'
+tokens_folder = '50-50_split/'
 output_folder = 'bagowords/'
 
 os.makedirs(output_folder, exist_ok=True)
+csv.field_size_limit(1310720)
 
 def process_file(token_file):
     # load tokens
