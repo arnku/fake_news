@@ -3,6 +3,7 @@ import os
 import math
 
 tokens_folder = 'numerated/'
+create_new_dfs = False
 csv.field_size_limit(1310720)
 
 
@@ -104,20 +105,26 @@ print('Sorting dfs...')
 # sort dfs
 dfs = sorted(dfs.items(), key=lambda x: x[1], reverse=True)
 # save idfs
-with open('dfs.csv', 'w') as f:
-    writer = csv.writer(f)
-    writer.writerow(['word', 'idf'])
-    for i, df_ in enumerate(dfs):
-        if df_[1] < cutoff_point:
-            print("Cutoff point reached.")
-            break
-        if i >= absolute_word_cutoff:
-            print("Max number of rows reached.")
-            break
-        #if i >= 1048576 - 1:
-        #    print("Max number of rows reached.")
-        #    break
-        writer.writerow(df_)
+if create_new_dfs:
+    with open('dfs.csv', 'w') as f:
+        writer = csv.writer(f)
+        writer.writerow(['word', 'idf'])
+        for i, df_ in enumerate(dfs):
+            if df_[1] < cutoff_point:
+                print("Cutoff point reached.")
+                break
+            if i >= absolute_word_cutoff:
+                print("Max number of rows reached.")
+                break
+            #if i >= 1048576 - 1:
+            #    print("Max number of rows reached.")
+            #    break
+            writer.writerow(df_)
+else:
+    with open('dfs.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader) # skip header
+        dfs = [row for row in reader]
 
 
 from multiprocessing import Pool
