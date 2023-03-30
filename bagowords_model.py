@@ -32,20 +32,21 @@ dfs = {}
 with open(dfs_file, 'r') as f:
     reader = csv.reader(f, delimiter=',')
     header = next(reader)
-    for i, row in enumerate(reader):
-        dfs[row[0]] = i
-
+    for i, r in enumerate(reader):
+        dfs[r[0]] = i
 dfs_len = len(dfs)
 
 print("Loading data...")
-# load bago
 header = True
 
 labels = {}
 first_time = True
 last_row = 0
-for i, matrix_file in enumerate(os.listdir(sparce_matrix_folder)):
-    if i > 250:
+
+sm_files = sorted(os.listdir(sparce_matrix_folder), key=lambda x: int(x.split('_')[-1].split('.')[0]))
+
+for i, matrix_file in enumerate(sm_files):
+    if i > 25:
         break
     print(matrix_file)
     with open(sparce_matrix_folder + matrix_file, 'r') as f:
@@ -57,9 +58,12 @@ for i, matrix_file in enumerate(os.listdir(sparce_matrix_folder)):
         cols = []
         vals = []
         n_row = 0
+
         for row in reader:
-            article_id, word_id = row[2], row[3]
+
+            article_id, word_id = row[1], row[2]
             article_id = int(article_id)
+
             if article_id not in labels:
                 labels[article_id] = (label_dict[row[0]])
 
@@ -102,3 +106,10 @@ print(clf.score(X_test, y_test))
 import pickle
 with open('bago_model.pkl', 'wb') as f:
     pickle.dump(clf, f)
+
+import matplotlib.pyplot as plt
+import sklearn.metrics as metrics
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, clf.predict(X_test), normalize='all').plot()
+plt.show()
+print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, clf.predict(X_test), average='macro'))
+

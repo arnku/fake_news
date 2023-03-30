@@ -70,7 +70,7 @@ label_dict = {
     'reliable': 'reliable',
     'political': 'reliable'
     }
-dataset_out = [False if label_dict[row[0]] == "fake" else True for row in dataset_out]
+dataset_out = [False if label_dict[row] == "fake" else True for row in dataset_out]
 
 
 X_train, X_test, y_train, y_test = train_test_split(dataset_in, dataset_out, test_size=0.2, random_state=42)
@@ -82,5 +82,11 @@ model.fit(X_train, y_train)
 print("Testing model...")
 # test model
 print("score: ", model.score(X_test, y_test))
+
+import sklearn.metrics as metrics
+import matplotlib.pyplot as plt
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, model.predict(X_test), normalize='all').plot()
+print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, model.predict(X_test), average='macro'))
+
 print("always guess correct: ", sum(y_test)/len(y_test))
 print("always guess incorrect: ", 1 - sum(y_test)/len(y_test))
