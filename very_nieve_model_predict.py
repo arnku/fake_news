@@ -57,4 +57,4 @@ import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
 metrics.ConfusionMatrixDisplay.from_predictions(dataset_out, model.predict(dataset_in)).plot()
 plt.show()
-print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(dataset_out, model.predict(dataset_in), average='micro'))
+print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(dataset_out, model.predict(dataset_in), average='binary'))

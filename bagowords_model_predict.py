@@ -111,4 +111,4 @@ import matplotlib.pyplot as plt
 import sklearn.metrics as metrics
 metrics.ConfusionMatrixDisplay.from_predictions(labels_n, model.predict(sparce_matrix), normalize='all').plot()
 plt.show()
-print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(labels_n, model.predict(sparce_matrix), average='micro'))  
+print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(labels_n, model.predict(sparce_matrix), average='binary'))  

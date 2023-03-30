@@ -131,4 +131,4 @@ import matplotlib.pyplot as plt
 import sklearn.metrics as metrics
 metrics.ConfusionMatrixDisplay.from_predictions(y_test, clf.predict(X_test), normalize='all').plot()
 plt.show()
-print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(y_test, clf.predict(X_test), average='micro'))
+print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(y_test, clf.predict(X_test), average='binary'))

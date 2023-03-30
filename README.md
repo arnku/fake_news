@@ -31,3 +31,5 @@
 **sparce_matrix.py** words_file = 'dfs.csv', tf_idf_folder = 'tf-idf/', save_folder = 'reduced_matrix/'
 
 **remove_gaps.py** folder1 = "tf-idf/", folder2 = "features/"
+
+**bagowords.py**
