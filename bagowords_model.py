@@ -1,12 +1,11 @@
 import os
 import csv
-#from sklearn.linear_model import LogisticRegression
-from sklearn.neural_network import MLPClassifier
-#from sklearn import naive_bayes
+from sklearn.linear_model import LogisticRegression
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 import ast
 import numpy as np
+import scipy.sparse as sp
 
 
 sparce_matrix_folder = 'reduced_matrix/'
@@ -42,46 +41,51 @@ print("Loading data...")
 # load bago
 header = True
 
-rows = []
-cols = []
-vals = []
 labels = {}
+first_time = True
+last_row = 0
 for i, matrix_file in enumerate(os.listdir(sparce_matrix_folder)):
-#for i, matrix_file in enumerate(["rematrix_tf-idf_fifty_token_rand_split_0.csv"]):
+    if i > 250:
+        break
     print(matrix_file)
     with open(sparce_matrix_folder + matrix_file, 'r') as f:
         reader = csv.reader(f, delimiter=',')
         if header:
             header = next(reader)
+
+        rows = []
+        cols = []
+        vals = []
+        n_row = 0
         for row in reader:
             article_id, word_id = row[2], row[3]
             article_id = int(article_id)
             if article_id not in labels:
                 labels[article_id] = (label_dict[row[0]])
-            
-            rows.append(int(article_id))
+
+            if article_id != last_row:
+                last_row = article_id
+                n_row += 1
+
+            rows.append(n_row)
             cols.append(int(word_id))
-            vals.append(float(row[4]))
+            vals.append(1)
+
+        if first_time:
+            first_time = False
+            sparce_matrix = csr_matrix((vals, (rows, cols)), shape=(n_row + 1, dfs_len))
+
+        else:
+            sparce_matrix = sp.vstack([sparce_matrix, csr_matrix((vals, (rows, cols)), shape=(n_row + 1, dfs_len))])
+
+        last_row += 1
 
 
-
-sparce_matrix = csr_matrix((vals, (rows, cols)))
-del rows
-del cols
-del vals
 # sort labels
-
 labels_n = []
 for i in range(len(labels)):
-    try:
-        labels_n.append(labels[i])
-    except:
-        pass
+    labels_n.append(labels[i])
 del labels
-
-print(sparce_matrix.shape)
-print(len(labels_n))
-
 
 print("Splitting data...")
 X_train, X_test, y_train, y_test = train_test_split(sparce_matrix, labels_n, test_size=0.2, random_state=42)
@@ -89,7 +93,12 @@ del sparce_matrix
 del labels_n
 
 print("Training...")
-clf = MLPClassifier(max_iter=100).fit(X_train, y_train)
+clf = LogisticRegression(max_iter=10000).fit(X_train, y_train)
 
 print("Testing...")
 print(clf.score(X_test, y_test))
+
+# save model
+import pickle
+with open('bago_model.pkl', 'wb') as f:
+    pickle.dump(clf, f)

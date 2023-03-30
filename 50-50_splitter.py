@@ -4,6 +4,7 @@ import csv
 tokens_folder = 'tokens/'
 save_path = '50-50_split/'
 os.makedirs(save_path, exist_ok=True)
+csv.field_size_limit(1310720)
 
 label_dict = {
     'bias': 'unreliable',
@@ -77,3 +78,4 @@ if __name__ == '__main__':
     split_data(files, label_count)
 
     print(count_label(os.listdir(save_path), folder = save_path))
+    # {'reliable': 3570431, 'unreliable': 3570094}
