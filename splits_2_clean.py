@@ -14,13 +14,13 @@ from time import time
 import csv
 import regex as re
 
-splits_folder = 'splits_randomized/'
+splits_folder = 'splits/'
 save_path = 'tokens/'
 
 csv.field_size_limit(1310720)
 os.makedirs(save_path, exist_ok=True)
 
-valid_labels = ['bias', 'satire', 'rumor', 'conspiracy', 'hate', 'fake', 'junksci', 'unreliable', 'clickbait', 'reliable', 'political']
+valid_labels = ['bias', 'satire', 'rumor', 'conspiracy', 'hate', 'fake', 'junksci', 'unreliable', 'clickbait', 'reliable', 'political', 'false', 'half-true', 'pants-fire', 'true', 'barely-true', 'mostly-true']
 
 # taken hostname, domainname, tld from URL regex below
 EMAIL_REGEX = re.compile(

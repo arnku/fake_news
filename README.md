@@ -1,3 +1,5 @@
+! This code is only tested on MacOS and Linux. It will not work on windows as we have used '/' for folders.
+
 # Rækkefølge
 
 **split_files.py** splitter datesæt til mindre filer.
@@ -11,3 +13,14 @@
 **tf-idf**
 
 **sparce_matrix**
+
+
+
+# Rækkefølge for liar
+
+**split_files_liar.py**, 
+
+**splits_2_clean** , splits_folder = 'splits/'
+
+**tf-idf**, tokens_folder = 'tokens/', create_new_dfs = False
+
