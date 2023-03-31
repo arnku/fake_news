@@ -13,6 +13,7 @@ First the data set musst be split into smaller chunks for it to use less memory 
 
 As the FakeNewsCorpus is not totally random in its distribution of labels, the labels are needed to be randomized.
 This is run already at this step, as it is then possible to delete some of the chunks afterwards, if a smaller data set is desired, without changing the distribution of the labels.
+
 **article_randomizer.py** Makes a same number of chunks, but randomizes articles position in them.
 Input and save folders should be set to:
 '''
@@ -22,6 +23,7 @@ save_folder = 'splits_randomized/'
 
 Most of the cleaning processed is then applied. This step will take a lot of CPU resources, so it is not recommended to run other programs while it runs.
 This steps removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
+
 **splits_2_clean.py** Cleans the data set. 
 Input and output folders should be set to:
 '''
@@ -31,6 +33,7 @@ save_path = 'tokens/'
 
 The data set is not garanteed to be balanced between reliable and unreliable articles. This step makes sure that there are around as many relaiable as unreliable articles.
 This step is run after *splits_2_clean.py* as it will process faster on the smaller files, but can be run at any time before. 
+
 **50-50_splitter.py** Deletes reliable or unreliable articles until they are almost balanced.
 Input and output folders should be set to:
 '''
@@ -55,6 +58,7 @@ label_dict = {
 '''
 
 The files are now mostly done being moved around and deleted, so now is a good time to give each article a unique number to be able to keep track of them.
+
 **numerate_articles.py** Gives each article a unique number in order. This number is stored at the first index of each article.
 Input and output folders should be set to:
 '''
@@ -63,6 +67,7 @@ save_folder = 'numerated/'
 '''
 
 The tf-idf is then found for each article, and the total df is also saved.
+
 **tf-idf.py** calculated tf-idf and df.
 Input and output folders should be set to:
 '''
@@ -73,6 +78,7 @@ If it is the first time running the training pipleine, 'create_new_dfs' should b
 This will create/overwrite the 'dfs.csv' file that contains the top 10.000 across all articles.
 
 The data files for a very simple bag of words model is also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
+
 **bagowords.py** Uses the top 10.000 words to create a bag of words, also counts how many words in each article is inside and outside the bag.
 Input and output folders should be set to:
 '''
@@ -82,6 +88,7 @@ output_folder = 'bagowords/'
 '''
 
 The advnaced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or Tensorflow, which both can take advantage of a GPU.
+
 **get_features.py** Calcualtes Lix, Sentiment, and percent out of bag, for each article.
 Input and output folders should be set to:
 '''
@@ -91,6 +98,7 @@ output_folder = 'features/'
 '''
 
 The prior two processes most likely will have discarded some articles as they could not be processed. To ensure that the articles still are in order, the removed articles are noted, and removed from both *features/* and *tf-idf/*. They should now contain the same articles. Then the articles are renumbered so they are in order. 
+
 **remove_gaps.py**
 Folders to be changed should be set to:
 '''
@@ -99,6 +107,7 @@ folder2 = "features/"
 '''
 
 We then change to tf-idf's to be in the form of a sparce matrix. This is to save memory later. 
+
 **sparce_matrix.py** Changes format to be able to be easilly parsed to a sparce matrix. 
 Input and output folders should be set to:
 '''
@@ -113,6 +122,7 @@ All the data needed for training is now done.
 
 ### Model A
 Train model A. This model is based on the number of words inside and outside the top 10.000 words.
+
 **model_a_train.py** 
 Input folders should be set to:
 '''
@@ -138,6 +148,7 @@ label_dict = {
 
 ### Model B
 Train model B. This model is based on the sparce matrix representation of a bag of words.
+
 **model_b_train.py**
 Input folders should be set to:
 '''
@@ -164,6 +175,7 @@ label_dict = {
 
 ### Model Advanced
 Train the advanced model. This model is based on tf-idf in a sparce matrix representation together with some features. 
+
 **model_adv_train.py**
 Input folders should be set to:
 '''
@@ -199,6 +211,7 @@ The test tsv file from LIAR must be unzipped and placed in the root folder of th
 Following is the order to run the scripts and what variables inside of the scripts should be set to.
 
 The tsv file is split into smaller chunks if necessary. This is done to save memory. The more important part of this step is to convert it to be in the same overall structure as the FakeNewsCorpus.
+
 **split_files_liar.py** Splits 'test.tsv' into smaller chunks, and saves them in 'splits/'
 Input and output folders should be set to:
 '''
@@ -207,6 +220,7 @@ file_name = 'test.tsv'
 '''
 
 Most of the cleaning processed is then applied. This steps removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
+
 **splits_2_clean.py** Cleans the data set. 
 Input and output folders should be set to:
 '''
@@ -215,6 +229,7 @@ save_path = 'tokens/'
 '''
 
 The data files for a very simple bag of words model is also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
+
 **bagowords.py** Uses the top 10.000 words to create a bag of words, also counts how many words in each article is inside and outside the bag.
 Input and output folders should be set to:
 '''
@@ -224,6 +239,7 @@ output_folder = 'bagowords/'
 '''
 
 The files are now mostly done being moved around and deleted, so now is a good time to give each article a unique number to be able to keep track of them.
+
 **numerate_articles.py** Gives each article a unique number in order. This number is stored at the first index of each article.
 Input and output folders should be set to:
 '''
@@ -233,6 +249,7 @@ header = False
 '''
 
 The tf-idf is then found for each article, and the total df is also saved.
+
 **tf-idf.py** calculated tf-idf and df.
 Input and output folders should be set to:
 '''
@@ -242,6 +259,7 @@ create_new_dfs = False
 '''
 
 The advnaced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or Tensorflow, which both can take advantage of a GPU.
+
 **get_features.py** Calcualtes Lix, Sentiment, and percent out of bag, for each article.
 Input and output folders should be set to:
 '''
@@ -251,6 +269,7 @@ output_folder = 'features/'
 '''
 
 We then change to tf-idf's to be in the form of a sparce matrix. This is to save memory later. 
+
 **sparce_matrix.py** Changes format to be able to be easilly parsed to a sparce matrix. 
 Input and output folders should be set to:
 '''
@@ -260,6 +279,7 @@ save_folder = 'reduced_matrix/'
 '''
 
 The prior two processes most likely will have discarded some articles as they could not be processed. To ensure that the articles still are in order, the removed articles are noted, and removed from both *features/* and *tf-idf/*. They should now contain the same articles. Then the articles are renumbered so they are in order. 
+
 **remove_gaps.py**
 Folders to be changed should be set to:
 '''
