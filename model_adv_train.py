@@ -8,13 +8,9 @@ import numpy as np
 import scipy.sparse as sp
 
 
-sparce_matrix_folder = 'testrrr2/'
-features_folder = 'test1/'
+sparce_matrix_folder = 'reduced_matrix/'
+features_folder = 'features/'
 dfs_file = 'dfs.csv'
-n_fetures = 4
-
-csv.field_size_limit(1310720)
-
 label_dict = {
     'bias': False,
     'satire': False,
@@ -28,6 +24,10 @@ label_dict = {
     'reliable': True,
     'political': True
     }
+
+n_fetures = 4
+csv.field_size_limit(1310720)
+
 
 # load dfs
 dfs = {}
@@ -124,7 +124,7 @@ print(clf.score(X_test, y_test))
 
 # save model
 import pickle
-with open('mlp_model.pkl', 'wb') as f:
+with open('model_adv.pkl', 'wb') as f:
     pickle.dump(clf, f)
 
 import matplotlib.pyplot as plt

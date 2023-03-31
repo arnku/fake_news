@@ -4,6 +4,20 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
 bago_folder = 'bagowords/'
+label_dict = {
+    'bias': False, 
+    'satire': False,
+    'rumor': False,
+    'conspiracy': False,
+    'hate': False,
+    'fake': False,
+    'junksci': False,
+    'unreliable': False,
+    'clickbait': False,
+    'reliable': True,
+    'political': True
+    }
+
 csv.field_size_limit(1310720)
 
 print("Loading data...")
@@ -24,20 +38,8 @@ for bago_file in os.listdir(bago_folder):
 print("Training model...")
 # split dataset
 
-label_dict = {
-    'bias': False, 
-    'satire': False,
-    'rumor': False,
-    'conspiracy': False,
-    'hate': False,
-    'fake': False,
-    'junksci': False,
-    'unreliable': False,
-    'clickbait': False,
-    'reliable': True,
-    'political': True
-    }
 
+dataset_out = [label_dict[row] for row in dataset_out]
 X_train, X_test, y_train, y_test = train_test_split(dataset_in, dataset_out, test_size=0.2, random_state=42)
 
 # train model
@@ -58,5 +60,5 @@ print("always guess incorrect: ", 1 - sum(y_test)/len(y_test))
 
 # Save model
 import pickle
-with open('nieve_model.pkl', 'wb') as f:
+with open('model_a.pkl', 'wb') as f:
     pickle.dump(model, f)

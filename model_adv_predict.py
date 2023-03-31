@@ -11,11 +11,6 @@ import scipy.sparse as sp
 sparce_matrix_folder = 'reduced_matrix/'
 features_folder = 'features/'
 dfs_file = 'dfs.csv'
-n_fetures = 4
-
-csv.field_size_limit(1310720)
-
-
 label_dict = {
     'bias': False,
     'satire': False,
@@ -36,6 +31,9 @@ label_dict = {
     'mostly-true': False,
     'true': True,
     }
+
+n_fetures = 4
+csv.field_size_limit(1310720)
 
 # load dfs
 dfs = {}
@@ -121,7 +119,7 @@ del labels
 
 # import model
 import pickle
-model_path = 'mlp_model.pkl'
+model_path = 'model_adv.pkl'
 with open(model_path, 'rb') as f:
     model = pickle.load(f)
 

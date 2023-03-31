@@ -10,9 +10,6 @@ import scipy.sparse as sp
 
 sparce_matrix_folder = 'reduced_matrix/'
 dfs_file = 'dfs.csv'
-
-csv.field_size_limit(1310720)
-
 label_dict = {
     'bias': False,
     'satire': False,
@@ -25,14 +22,10 @@ label_dict = {
     'clickbait': False,
     'reliable': True,
     'political': True,
-
-    'pants-fire': False,
-    'false': False,
-    'half-true': False,
-    'barely-true': False,
-    'mostly-true': False,
-    'true': True,
     }
+
+csv.field_size_limit(1310720)
+
 
 # load dfs
 dfs = {}
@@ -98,17 +91,25 @@ for i in range(len(labels)):
     labels_n.append(labels[i])
 del labels
 
+print("Splitting data...")
+X_train, X_test, y_train, y_test = train_test_split(sparce_matrix, labels_n, test_size=0.2, random_state=42)
+del sparce_matrix
+del labels_n
 
-# import model
+print("Training...")
+clf = LogisticRegression(max_iter=10000).fit(X_train, y_train)
+
+print("Testing...")
+print(clf.score(X_test, y_test))
+
+# save model
 import pickle
-model_path = 'bago_model.pkl'
-with open(model_path, 'rb') as f:
-    model = pickle.load(f)
-
-print(model.score(sparce_matrix, labels_n))
+with open('model_b.pkl', 'wb') as f:
+    pickle.dump(clf, f)
 
 import matplotlib.pyplot as plt
 import sklearn.metrics as metrics
-metrics.ConfusionMatrixDisplay.from_predictions(labels_n, model.predict(sparce_matrix), normalize='all').plot()
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, clf.predict(X_test), normalize='all').plot()
 plt.show()
-print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(labels_n, model.predict(sparce_matrix), average='binary'))  
+print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, clf.predict(X_test), average='binary'))
+

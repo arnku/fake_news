@@ -4,8 +4,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
 bago_folder = 'bagowords/'
-csv.field_size_limit(1310720)
-
 label_dict = {
     'bias': False,
     'satire': False,
@@ -27,6 +25,9 @@ label_dict = {
     'true': True,
     }
 
+csv.field_size_limit(1310720)
+
+
 print("Loading data...")
 # load bago
 header = True
@@ -45,7 +46,7 @@ for bago_file in os.listdir(bago_folder):
 
 # import model
 import pickle
-model_path = 'nieve_model.pkl'
+model_path = 'model_a.pkl'
 with open(model_path, 'rb') as f:
     model = pickle.load(f)
 
