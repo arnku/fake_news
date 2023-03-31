@@ -22,6 +22,7 @@ os.makedirs(save_path, exist_ok=True)
 
 valid_labels = ['bias', 'satire', 'rumor', 'conspiracy', 'hate', 'fake', 'junksci', 'unreliable', 'clickbait', 'reliable', 'political', 'false', 'half-true', 'pants-fire', 'true', 'barely-true', 'mostly-true']
 
+# Regex taken from clean-text package
 # taken hostname, domainname, tld from URL regex below
 EMAIL_REGEX = re.compile(
     r"(?:^|(?<=[^\w@.)]))([\w+-](\.(?!\.))?)*?[\w+-](@|[(<{\[]at[)>}\]])(?:(?:[a-z\\u00a1-\\uffff0-9]-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\.(?:[a-z\\u00a1-\\uffff0-9]-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\.(?:[a-z\\u00a1-\\uffff]{2,}))",
