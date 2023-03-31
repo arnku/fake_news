@@ -3,9 +3,11 @@ import os
 import math
 
 tokens_folder = 'numerated/'
+save_folder = 'tf-idf/'
 create_new_dfs = False
-csv.field_size_limit(1310720)
 
+os.makedirs(save_folder, exist_ok=True)
+csv.field_size_limit(1310720)
 
 def tf(article : str) -> dict:
     '''
@@ -129,8 +131,6 @@ else:
 
 from multiprocessing import Pool
 
-save_folder = 'tf-idf/'
-os.makedirs(save_folder, exist_ok=True)
 
 def process_file(token_file):
     tf_list = []

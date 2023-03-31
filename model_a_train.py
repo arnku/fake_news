@@ -25,7 +25,7 @@ print("Training model...")
 # split dataset
 
 label_dict = {
-    'bias': False,
+    'bias': False, 
     'satire': False,
     'rumor': False,
     'conspiracy': False,
@@ -35,26 +35,28 @@ label_dict = {
     'unreliable': False,
     'clickbait': False,
     'reliable': True,
-    'political': True,
-
-    'pants-fire': False,
-    'false': False,
-    'half-true': False,
-    'barely-true': False,
-    'mostly-true': False,
-    'true': True,
+    'political': True
     }
 
-# import model
-import pickle
-model_path = 'nieve_model.pkl'
-with open(model_path, 'rb') as f:
-    model = pickle.load(f)
+X_train, X_test, y_train, y_test = train_test_split(dataset_in, dataset_out, test_size=0.2, random_state=42)
 
-print(model.score(dataset_in, dataset_out))
+# train model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+print("Testing model...")
+# test model
+print("score: ", model.score(X_test, y_test))
 
 import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
-metrics.ConfusionMatrixDisplay.from_predictions(dataset_out, model.predict(dataset_in)).plot()
-plt.show()
-print("precision_recall_fscore_support:", metrics.precision_recall_fscore_support(dataset_out, model.predict(dataset_in), average='binary'))
+metrics.ConfusionMatrixDisplay.from_predictions(y_test, model.predict(X_test), normalize='all').plot()
+print("precision_recall_fscore_support: ", metrics.precision_recall_fscore_support(y_test, model.predict(X_test), average='binary'))
+
+print("always guess correct: ", sum(y_test)/len(y_test))
+print("always guess incorrect: ", 1 - sum(y_test)/len(y_test))
+
+# Save model
+import pickle
+with open('nieve_model.pkl', 'wb') as f:
+    pickle.dump(model, f)

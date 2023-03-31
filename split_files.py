@@ -7,8 +7,8 @@ import csv
 import os
 import regex as re
 
+file_name = 'FakeNewsCorpus.csv'
 save_path = 'splits/'
-file_name = 'BIG.csv'
 split_size = 20000 # Number of lines per file
 
 # Create folder to save the splits

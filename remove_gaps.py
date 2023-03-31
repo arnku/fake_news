@@ -2,6 +2,9 @@ import os
 import csv
 import shutil
 
+folder1 = "tf-idf/"
+folder2 = "features/"
+
 csv.field_size_limit(1310720)
 
 def get_missing_indecies(files, header = True):
@@ -156,8 +159,6 @@ def remove_empty_files(folder):
                 os.remove(folder + file_)
 
 if __name__ == "__main__":
-    folder1 = "tf-idf/"
-    folder2 = "features/"
     remove_relative_gaps(folder1,folder2)
     remove_gaps(folder1)
     remove_gaps(folder2)

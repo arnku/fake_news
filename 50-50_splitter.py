@@ -3,9 +3,6 @@ import csv
 
 tokens_folder = 'tokens/'
 save_path = '50-50_split/'
-os.makedirs(save_path, exist_ok=True)
-csv.field_size_limit(1310720)
-
 label_dict = {
     'bias': 'unreliable',
     'satire': 'unreliable',
@@ -19,6 +16,10 @@ label_dict = {
     'reliable': 'reliable',
     'political': 'reliable',
     }
+
+os.makedirs(save_path, exist_ok=True)
+csv.field_size_limit(1310720)
+
 
 def count_label(files, folder = tokens_folder):
     '''

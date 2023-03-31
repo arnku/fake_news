@@ -3,7 +3,7 @@ import csv
 from multiprocessing import Pool
 
 dfs_file = 'dfs.csv'
-tokens_folder = '50-50_split/'
+tokens_folder = 'splits/'
 output_folder = 'bagowords/'
 
 os.makedirs(output_folder, exist_ok=True)
@@ -44,5 +44,5 @@ if __name__ == '__main__':
     dfs_len = len(dfs)
 
     with Pool() as p:
-        p.map(process_file, os.listdir(tokens_folder))
+       p.map(process_file, os.listdir(tokens_folder))
                 

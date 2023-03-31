@@ -26,7 +26,7 @@ invalid_count = 0
 total_valid_count = 0
 with open(file_name, 'r') as r:
     reader = csv.reader(r, delimiter='\t')
-    header = next(reader) # skip header
+    next(reader) # skip header
     
     for i, row in enumerate(reader):
         # Create a new file every 20000 lines

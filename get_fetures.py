@@ -2,8 +2,8 @@ import os
 import csv
 from transformers import pipeline
 
-tokens_folder = 'numerated/'
 words_file = 'dfs.csv'
+tokens_folder = 'numerated/'
 output_folder = 'features/'
 
 model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"

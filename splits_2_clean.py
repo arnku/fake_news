@@ -14,7 +14,7 @@ from time import time
 import csv
 import regex as re
 
-splits_folder = 'splits/'
+splits_folder = 'splits_randomized/'
 save_path = 'tokens/'
 
 csv.field_size_limit(1310720)

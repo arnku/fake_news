@@ -1,6 +1,9 @@
 import os
 import csv
 
+tokens_folder = 'tokens/'
+save_folder = 'numerated/'
+
 csv.field_size_limit(1310720)
 
 def numerate(input_folder, output_folder, header = True):
@@ -28,4 +31,4 @@ def numerate(input_folder, output_folder, header = True):
                     n += 1
 
 if __name__ == '__main__':
-    numerate('tokens/', 'numerated/', header = False)
+    numerate(tokens_folder, save_folder, header = False)
