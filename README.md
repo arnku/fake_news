@@ -16,32 +16,32 @@ This is run already at this step, as it is then possible to delete some of the c
 
 **article_randomizer.py** Makes a same number of chunks, but randomizes articles position in them.
 Input and save folders should be set to:
-'''
+```
 input_folder = 'splits/'
 save_folder = 'splits_randomized/' 
-'''
+```
 
 Most of the cleaning processed is then applied. This step will take a lot of CPU resources, so it is not recommended to run other programs while it runs.
 This steps removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
 
 **splits_2_clean.py** Cleans the data set. 
 Input and output folders should be set to:
-'''
+```
 splits_folder = 'splits/'
 save_path = 'tokens/'
-'''
+```
 
 The data set is not garanteed to be balanced between reliable and unreliable articles. This step makes sure that there are around as many relaiable as unreliable articles.
 This step is run after *splits_2_clean.py* as it will process faster on the smaller files, but can be run at any time before. 
 
 **50-50_splitter.py** Deletes reliable or unreliable articles until they are almost balanced.
 Input and output folders should be set to:
-'''
+```
 tokens_folder = 'tokens/'
 save_path = '50-50_split/'
-'''
+```
 In addition to this, what is considered relaible or unreliable can be changed in 'label_dict'.
-'''
+```
 label_dict = {
     'bias': 'unreliable',
     'satire': 'unreliable',
@@ -55,25 +55,25 @@ label_dict = {
     'reliable': 'reliable',
     'political': 'reliable',
     }
-'''
+```
 
 The files are now mostly done being moved around and deleted, so now is a good time to give each article a unique number to be able to keep track of them.
 
 **numerate_articles.py** Gives each article a unique number in order. This number is stored at the first index of each article.
 Input and output folders should be set to:
-'''
+```
 tokens_folder = '50-50_split/'
 save_folder = 'numerated/'
-'''
+```
 
 The tf-idf is then found for each article, and the total df is also saved.
 
 **tf-idf.py** calculated tf-idf and df.
 Input and output folders should be set to:
-'''
+```
 tokens_folder = 'numerated/'
 save_folder = 'tf-idf/'
-'''
+```
 If it is the first time running the training pipleine, 'create_new_dfs' should be set to 'True'. 
 This will create/overwrite the 'dfs.csv' file that contains the top 10.000 across all articles.
 
@@ -81,40 +81,40 @@ The data files for a very simple bag of words model is also created. This is run
 
 **bagowords.py** Uses the top 10.000 words to create a bag of words, also counts how many words in each article is inside and outside the bag.
 Input and output folders should be set to:
-'''
+```
 dfs_file = 'dfs.csv'
 tokens_folder = '50-50_split/'
 output_folder = 'bagowords/'
-'''
+```
 
 The advnaced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or Tensorflow, which both can take advantage of a GPU.
 
 **get_features.py** Calcualtes Lix, Sentiment, and percent out of bag, for each article.
 Input and output folders should be set to:
-'''
+```
 words_file = 'dfs.csv'
 tokens_folder = 'numerated/'
 output_folder = 'features/'
-'''
+```
 
 The prior two processes most likely will have discarded some articles as they could not be processed. To ensure that the articles still are in order, the removed articles are noted, and removed from both *features/* and *tf-idf/*. They should now contain the same articles. Then the articles are renumbered so they are in order. 
 
 **remove_gaps.py**
 Folders to be changed should be set to:
-'''
+```
 folder1 = "tf-idf/"
 folder2 = "features/"
-'''
+```
 
 We then change to tf-idf's to be in the form of a sparce matrix. This is to save memory later. 
 
 **sparce_matrix.py** Changes format to be able to be easilly parsed to a sparce matrix. 
 Input and output folders should be set to:
-'''
+```
 words_file = 'dfs.csv'
 tf_idf_folder = 'tf-idf/'
 save_folder = 'reduced_matrix/'
-'''
+```
 
 All the data needed for training is now done.
 
@@ -125,12 +125,12 @@ Train model A. This model is based on the number of words inside and outside the
 
 **model_a_train.py** 
 Input folders should be set to:
-'''
+```
 bago_folder = 'bagowords/'
-'''
+```
 Saves the model as 'model_a.pkl'.
 If 'label_dict' was changed earlier, it should then also be changed accordingly here. 'False' is unreliable, and 'True' is reliable.
-'''
+```
 label_dict = {
     'bias': False, 
     'satire': False,
@@ -144,20 +144,20 @@ label_dict = {
     'reliable': True,
     'political': True
     }
-'''
+```
 
 ### Model B
 Train model B. This model is based on the sparce matrix representation of a bag of words.
 
 **model_b_train.py**
 Input folders should be set to:
-'''
+```
 sparce_matrix_folder = 'reduced_matrix/'
 dfs_file = 'dfs.csv'
-'''
+```
 Saves the model as 'model_b.pkl'.
 If 'label_dict' was changed earlier, it should then also be changed accordingly here. 'False' is unreliable, and 'True' is reliable.
-'''
+```
 label_dict = {
     'bias': False,
     'satire': False,
@@ -171,21 +171,21 @@ label_dict = {
     'reliable': True,
     'political': True,
     }
-'''
+```
 
 ### Model Advanced
 Train the advanced model. This model is based on tf-idf in a sparce matrix representation together with some features. 
 
 **model_adv_train.py**
 Input folders should be set to:
-'''
+```
 sparce_matrix_folder = 'reduced_matrix/'
 features_folder = 'features/'
 dfs_file = 'dfs.csv'
-'''
+```
 Saves the model as 'model_adv.pkl'.
 If 'label_dict' was changed earlier, it should then also be changed accordingly here. 'False' is unreliable, and 'True' is reliable.
-'''
+```
 label_dict = {
     'bias': False,
     'satire': False,
@@ -199,7 +199,7 @@ label_dict = {
     'reliable': True,
     'political': True
     }
-'''
+```
 
 # Predicting on LIAR
 To be able to predict on the LIAR, the data must first be cleaned and processed.
@@ -214,78 +214,78 @@ The tsv file is split into smaller chunks if necessary. This is done to save mem
 
 **split_files_liar.py** Splits 'test.tsv' into smaller chunks, and saves them in 'splits/'
 Input and output folders should be set to:
-'''
+```
 save_path = 'splits/'
 file_name = 'test.tsv'
-'''
+```
 
 Most of the cleaning processed is then applied. This steps removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
 
 **splits_2_clean.py** Cleans the data set. 
 Input and output folders should be set to:
-'''
+```
 splits_folder = 'splits/'
 save_path = 'tokens/'
-'''
+```
 
 The data files for a very simple bag of words model is also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
 
 **bagowords.py** Uses the top 10.000 words to create a bag of words, also counts how many words in each article is inside and outside the bag.
 Input and output folders should be set to:
-'''
+```
 dfs_file = 'dfs.csv'
 tokens_folder = 'tokens/'
 output_folder = 'bagowords/'
-'''
+```
 
 The files are now mostly done being moved around and deleted, so now is a good time to give each article a unique number to be able to keep track of them.
 
 **numerate_articles.py** Gives each article a unique number in order. This number is stored at the first index of each article.
 Input and output folders should be set to:
-'''
+```
 tokens_folder = 'tokens/'
 save_folder = 'numerated/'
 header = False
-'''
+```
 
 The tf-idf is then found for each article, and the total df is also saved.
 
 **tf-idf.py** calculated tf-idf and df.
 Input and output folders should be set to:
-'''
+```
 tokens_folder = 'numerated/'
 save_folder = 'tf-idf/'
 create_new_dfs = False
-'''
+```
 
 The advnaced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or Tensorflow, which both can take advantage of a GPU.
 
 **get_features.py** Calcualtes Lix, Sentiment, and percent out of bag, for each article.
 Input and output folders should be set to:
-'''
+```
 words_file = 'dfs.csv'
 tokens_folder = 'numerated/'
 output_folder = 'features/'
-'''
+```
 
 We then change to tf-idf's to be in the form of a sparce matrix. This is to save memory later. 
 
 **sparce_matrix.py** Changes format to be able to be easilly parsed to a sparce matrix. 
 Input and output folders should be set to:
-'''
+```
 words_file = 'dfs.csv'
 tf_idf_folder = 'tf-idf/'
 save_folder = 'reduced_matrix/'
-'''
+```
 
 The prior two processes most likely will have discarded some articles as they could not be processed. To ensure that the articles still are in order, the removed articles are noted, and removed from both *features/* and *tf-idf/*. They should now contain the same articles. Then the articles are renumbered so they are in order. 
 
 **remove_gaps.py**
 Folders to be changed should be set to:
-'''
+```
 folder1 = "tf-idf/"
 folder2 = "features/"
-'''
+```
 
 All the data is now ready to be predicted on.
 
@@ -294,12 +294,12 @@ All the data is now ready to be predicted on.
 ### Model A
 **model_a_predict.py**
 The input folders should be set to:
-'''
+```
 bago_folder = 'bagowords/'
-'''
+```
 If 'label_dict' was changed earlier, it should then also be changed accordingly here. 'False' is unreliable, and 'True' is reliable.
 The meaning of the labels from LIAR is also set here.
-'''
+```
 label_dict = {
     'bias': False,
     'satire': False,
@@ -320,18 +320,18 @@ label_dict = {
     'mostly-true': False,
     'true': True,
     }
-'''
+```
 
 ### Model B
 **model_b_predict.py**
 The input folders should be set to:
-'''
+```
 sparce_matrix_folder = 'reduced_matrix/'
 dfs_file = 'dfs.csv'
-'''
+```
 If 'label_dict' was changed earlier, it should then also be changed accordingly here. 'False' is unreliable, and 'True' is reliable.
 The meaning of the labels from LIAR is also set here.
-'''
+```
 label_dict = {
     'bias': False,
     'satire': False,
@@ -352,19 +352,19 @@ label_dict = {
     'mostly-true': False,
     'true': True,
     }
-'''
+```
 
 ### Model Adv
 **model_adv_predict.py**
 The input folders should be set to:
-'''
+```
 sparce_matrix_folder = 'reduced_matrix/'
 features_folder = 'features/'
 dfs_file = 'dfs.csv'
-'''
+```
 If 'label_dict' was changed earlier, it should then also be changed accordingly here. 'False' is unreliable, and 'True' is reliable.
 The meaning of the labels from LIAR is also set here.
-'''
+```
 label_dict = {
     'bias': False,
     'satire': False,
@@ -385,11 +385,11 @@ label_dict = {
     'mostly-true': False,
     'true': True,
     }
-'''
+```
 
 # Libraries
 The used Python libraries and their versions:
-'''
+```
 anyio==3.6.2
   - idna [required: >=2.8, installed: 3.4]
   - sniffio [required: >=1.1, installed: 1.3.0]
@@ -501,4 +501,4 @@ webcolors==1.12
 websocket-client==1.5.1
 wheel==0.37.0
 widgetsnbextension==4.0.5
-'''
+```
