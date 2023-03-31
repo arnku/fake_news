@@ -1,5 +1,5 @@
-This code is only tested on MacOS and Linux. It will not work on windows as we have used '/' for folders.
-Specifically a macbook pro 14" m1 16GB, and a Linux machine with an AMD Ryzen cpu with 16-threads and 16GB RAM. It is a good idea to have at least 100GB of hard-disc space empty if hte whole dataset is processed. Some of the processes will use all available threads. 
+ This code is only tested on MacOS and Linux. It will not work on windows as we have used '/' for folders.
+Specifically, a MacBook pro 14" m1 16GB, and a Linux machine with an AMD Ryzen CPU with 16-threads and 16GB RAM. It is a good idea to have at least 100GB of hard-disc space empty if the whole dataset is processed. Some of the processes will use all available threads. 
 
 # Training
 To be able to train on the FakeNewsCorpus, the data must first be cleaned and processed.
@@ -8,13 +8,13 @@ To be able to train on the FakeNewsCorpus, the data must first be cleaned and pr
 The csv file from FakeNewsCorpus must be unzipped and placed in the root folder of the project, and must be named 'FakeNewsCorpus.csv'
 Following is the order to run the scripts and what variables inside of the scripts should be set to.
 
-First the data set musst be split into smaller chunks for it to use less memory while processing. The defualt size for this is chunks of 20.000 articels, but can be changed by setting the 'split_size' variable. This step also removes articles only consisting of non-latin characters. 
+First the data set must be split into smaller chunks for it to use less memory while processing. The default size for this is chunks of 20.000 articles but can be changed by setting the 'split_size' variable. This step also removes articles only consisting of non-Latin characters. 
 **split_files.py** Splits 'FakeNewsCorpus.csv' into smaller chunks, and saves them in 'splits/'
 
 As the FakeNewsCorpus is not totally random in its distribution of labels, the labels are needed to be randomized.
 This is run already at this step, as it is then possible to delete some of the chunks afterwards, if a smaller data set is desired, without changing the distribution of the labels.
 
-**article_randomizer.py** Makes a same number of chunks, but randomizes articles position in them.
+**article_randomizer.py** Makes a same number of chunks but randomizes articles position in them.
 Input and save folders should be set to:
 ```
 input_folder = 'splits/'
@@ -22,7 +22,7 @@ save_folder = 'splits_randomized/'
 ```
 
 Most of the cleaning processed is then applied. This step will take a lot of CPU resources, so it is not recommended to run other programs while it runs.
-This steps removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
+This step removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
 
 **splits_2_clean.py** Cleans the data set. 
 Input and output folders should be set to:
@@ -31,8 +31,8 @@ splits_folder = 'splits/'
 save_path = 'tokens/'
 ```
 
-The data set is not garanteed to be balanced between reliable and unreliable articles. This step makes sure that there are around as many relaiable as unreliable articles.
-This step is run after *splits_2_clean.py* as it will process faster on the smaller files, but can be run at any time before. 
+The data set is not guaranteed to be balanced between reliable and unreliable articles. This step makes sure that there are around as many reliable as unreliable articles.
+This step is run after *splits_2_clean.py* as it will process faster on the smaller files but can be run at any time before. 
 
 **50-50_splitter.py** Deletes reliable or unreliable articles until they are almost balanced.
 Input and output folders should be set to:
@@ -40,7 +40,7 @@ Input and output folders should be set to:
 tokens_folder = 'tokens/'
 save_path = '50-50_split/'
 ```
-In addition to this, what is considered relaible or unreliable can be changed in 'label_dict'.
+In addition to this, what is considered reliable or unreliable can be changed in 'label_dict'.
 ```
 label_dict = {
     'bias': 'unreliable',
@@ -74,10 +74,10 @@ Input and output folders should be set to:
 tokens_folder = 'numerated/'
 save_folder = 'tf-idf/'
 ```
-If it is the first time running the training pipleine, 'create_new_dfs' should be set to 'True'. 
+If it is the first time running the training pipeline, 'create_new_dfs' should be set to 'True'. 
 This will create/overwrite the 'dfs.csv' file that contains the top 10.000 across all articles.
 
-The data files for a very simple bag of words model is also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
+The data files for a very simple bag of words model are also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
 
 **bagowords.py** Uses the top 10.000 words to create a bag of words, also counts how many words in each article is inside and outside the bag.
 Input and output folders should be set to:
@@ -87,9 +87,9 @@ tokens_folder = '50-50_split/'
 output_folder = 'bagowords/'
 ```
 
-The advnaced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or Tensorflow, which both can take advantage of a GPU.
+The advanced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or TensorFlow, which both can take advantage of a GPU.
 
-**get_features.py** Calcualtes Lix, Sentiment, and percent out of bag, for each article.
+**get_features.py** Calculates Lix, Sentiment, and percent out of bag, for each article.
 Input and output folders should be set to:
 ```
 words_file = 'dfs.csv'
@@ -108,7 +108,7 @@ folder2 = "features/"
 
 We then change to tf-idf's to be in the form of a sparce matrix. This is to save memory later. 
 
-**sparce_matrix.py** Changes format to be able to be easilly parsed to a sparce matrix. 
+**sparce_matrix.py** Changes format to be able to be easily parsed to a sparce matrix. 
 Input and output folders should be set to:
 ```
 words_file = 'dfs.csv'
@@ -219,7 +219,7 @@ save_path = 'splits/'
 file_name = 'test.tsv'
 ```
 
-Most of the cleaning processed is then applied. This steps removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
+Most of the cleaning processed is then applied. This step removes files that it has processed. This is so that it does not have to start over if the process is interrupted. 
 
 **splits_2_clean.py** Cleans the data set. 
 Input and output folders should be set to:
@@ -228,7 +228,7 @@ splits_folder = 'splits/'
 save_path = 'tokens/'
 ```
 
-The data files for a very simple bag of words model is also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
+The data files for a very simple bag of words model are also created. This is run after *tf-idf.py* as it requires the *dfs.csv* file.
 
 **bagowords.py** Uses the top 10.000 words to create a bag of words, also counts how many words in each article is inside and outside the bag.
 Input and output folders should be set to:
@@ -258,9 +258,9 @@ save_folder = 'tf-idf/'
 create_new_dfs = False
 ```
 
-The advnaced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or Tensorflow, which both can take advantage of a GPU.
+The advanced model also needs some extra features. These are extracted here. This process takes a very long time as it runs sentiment analysis. It is recommended to have a GPU for this step, as the sentiment analysis model is based on either PyTourch or TensorFlow, which both can take advantage of a GPU.
 
-**get_features.py** Calcualtes Lix, Sentiment, and percent out of bag, for each article.
+**get_features.py** Calculates Lix, Sentiment, and percent out of bag, for each article.
 Input and output folders should be set to:
 ```
 words_file = 'dfs.csv'
@@ -270,7 +270,7 @@ output_folder = 'features/'
 
 We then change to tf-idf's to be in the form of a sparce matrix. This is to save memory later. 
 
-**sparce_matrix.py** Changes format to be able to be easilly parsed to a sparce matrix. 
+**sparce_matrix.py** Changes format to be able to be easily parsed to a sparce matrix. 
 Input and output folders should be set to:
 ```
 words_file = 'dfs.csv'
